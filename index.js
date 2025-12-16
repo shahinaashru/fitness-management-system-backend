@@ -11,19 +11,33 @@ const server = http.createServer(app);
 const apiRouter = require("./src/Routes");
 const webhookRouter = require("./src/Routes/v1/webhookRoutes");
 const chatSocket = require("./src/sockets/chatSocket");
-app.use(
-  cors({
-    origin: process.env.CLIENT_URL,
-    credentials: true,
-  })
-);
-// app.options(
-//   "*",
+// app.use(
 //   cors({
 //     origin: process.env.CLIENT_URL,
 //     credentials: true,
 //   })
 // );
+const allowedOrigins = [
+  "https://shahinaashru.github.io",
+  "https://shahinaashru.github.io/fitness-management-system-frontend",
+];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // allow requests with no origin (like Postman)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true); // allow this origin
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
+);
+app.options("*", cors({ origin: allowedOrigins, credentials: true }));
 app.use(cookieParser());
 app.use("/api/v1/stripe", webhookRouter);
 mongoose
