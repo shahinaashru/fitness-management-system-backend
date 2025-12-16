@@ -1,6 +1,6 @@
 const asyncHandler = require("../Middlewares/asyncHandler");
 const userDB = require("../Models/userModel");
-const uploadToCloudinary = require("../Utilities/imageUpload");
+const uploadToCloudinary = require("../utilities/imageUpload");
 const cloudinary = require("../config/cloudinaryConfig");
 const trainerDB = require("../Models/trainerModel");
 const orderDB = require("../Models/orderModel");
