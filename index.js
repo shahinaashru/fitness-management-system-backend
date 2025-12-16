@@ -18,7 +18,7 @@ app.use(
   })
 );
 app.options(
-  "*",
+  "/*",
   cors({
     origin: process.env.CLIENT_URL,
     credentials: true,
