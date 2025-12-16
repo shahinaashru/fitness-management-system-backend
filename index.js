@@ -37,7 +37,6 @@ app.use(
     credentials: true,
   })
 );
-app.options("*", cors({ origin: allowedOrigins, credentials: true }));
 app.use(cookieParser());
 app.use("/api/v1/stripe", webhookRouter);
 mongoose
