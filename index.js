@@ -5,7 +5,7 @@ require("dotenv").config();
 const cookieParser = require("cookie-parser");
 const http = require("http");
 const { Server } = require("socket.io");
-const port = process.env.PORT;
+const port = process.env.PORT || 3000;
 const app = express();
 const server = http.createServer(app);
 const apiRouter = require("./src/Routes");
