@@ -1,5 +1,5 @@
 const asyncHandler = require("../Middlewares/asyncHandler");
-const uploadToCloudinary = require("../Utilities/imageUpload");
+const uploadToCloudinary = require("../utilities/imageUpload");
 const fitnessProgramDB = require("../Models/fitnessProgramModel");
 const trainerDB = require("../Models/trainerModel");
 const orderDB = require("../Models/orderModel");
