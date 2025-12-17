@@ -11,19 +11,12 @@ const server = http.createServer(app);
 const apiRouter = require("./src/Routes");
 const webhookRouter = require("./src/Routes/v1/webhookRoutes");
 const chatSocket = require("./src/sockets/chatSocket");
-// app.use(
-//   cors({
-//     origin: process.env.CLIENT_URL,
-//     credentials: true,
-//   })
-// );
 app.use(
   cors({
-    origin: ["https://shahinaashru.github.io"],
+    origin: process.env.CLIENT_URL,
     credentials: true,
   })
 );
-
 app.use(cookieParser());
 app.use("/api/v1/stripe", webhookRouter);
 mongoose
