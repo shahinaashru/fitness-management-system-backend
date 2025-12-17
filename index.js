@@ -17,26 +17,16 @@ const chatSocket = require("./src/sockets/chatSocket");
 //     credentials: true,
 //   })
 // );
-const allowedOrigins = [
-  "https://shahinaashru.github.io",
-  "https://shahinaashru.github.io/fitness-management-system-frontend",
-];
-
 app.use(
   cors({
-    origin: function (origin, callback) {
-      // allow requests with no origin (like Postman)
-      if (!origin) return callback(null, true);
-
-      if (allowedOrigins.includes(origin)) {
-        callback(null, true); // allow this origin
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
+    origin: [
+      "https://shahinaashru.github.io",
+      "https://shahinaashru.github.io/fitness-management-system-frontend",
+    ],
     credentials: true,
   })
 );
+
 app.use(cookieParser());
 app.use("/api/v1/stripe", webhookRouter);
 mongoose
