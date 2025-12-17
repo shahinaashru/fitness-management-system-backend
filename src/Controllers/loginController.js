@@ -25,7 +25,12 @@ exports.register = asyncHandler(async (req, res) => {
   });
   const saved = registeredUser.save();
   const token = createToken(registeredUser, "user");
-  res.cookie("token", token);
+  res.cookie("token", token, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+  });
+
   if (saved) {
     return res
       .status(201)
@@ -47,7 +52,12 @@ exports.login = asyncHandler(async (req, res) => {
   }
   const { password: pwd, ...userWithoutPassword } = loginedUser.toObject();
   const token = createToken(loginedUser, loginedUser.role);
-  res.cookie("token", token);
+  res.cookie("token", token, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+  });
+
   return res
     .status(201)
     .json({ message: "User Logged in succesfully", user: userWithoutPassword });
