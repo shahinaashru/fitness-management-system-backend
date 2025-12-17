@@ -19,10 +19,7 @@ const chatSocket = require("./src/sockets/chatSocket");
 // );
 app.use(
   cors({
-    origin: [
-      "https://shahinaashru.github.io",
-      "https://shahinaashru.github.io/fitness-management-system-frontend",
-    ],
+    origin: ["https://shahinaashru.github.io"],
     credentials: true,
   })
 );
