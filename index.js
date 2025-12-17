@@ -17,13 +17,6 @@ app.use(
     credentials: true,
   })
 );
-// app.use(
-//   cors({
-//     origin: ["https://shahinaashru.github.io"],
-//     credentials: true,
-//   })
-// );
-
 app.use(cookieParser());
 app.use("/api/v1/stripe", webhookRouter);
 mongoose
