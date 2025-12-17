@@ -13,7 +13,7 @@ const webhookRouter = require("./src/Routes/v1/webhookRoutes");
 const chatSocket = require("./src/sockets/chatSocket");
 app.use(
   cors({
-    origin: [process.env.CLIENT_URL],
+    origin: process.env.CLIENT_URL,
     credentials: true,
   })
 );
