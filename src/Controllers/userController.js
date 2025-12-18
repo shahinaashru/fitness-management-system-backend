@@ -35,30 +35,31 @@ exports.createProfile = asyncHandler(async (req, res) => {
   });
 });
 exports.updateProfile = asyncHandler(async (req, res) => {
+  const profileId = req.params.id;
   const { fullname, age, gender, height, weight, fitness_goals } = req.body;
-  const { id } = req.params;
-  let user = await userDB.findById(id);
-  console.log(user);
-  if (!user) {
-    return res.status(400).json({ message: "User not exist" });
+  const profile = await userDB.findById(profileId);
+  if (!profile) {
+    return res.status(404).json({ message: "Profile not found" });
   }
-  const updatedData = await userDB.findOneAndUpdate(
-    { _id: id },
-    {
-      fullname,
-      age,
-      gender,
-      height,
-      weight,
-      fitness_goals,
-    },
-    { new: true }
-  );
-  if (updatedData) {
-    return res
-      .status(201)
-      .json({ message: "User profile updated succesfully", user: updatedData });
+  if (profile.loginId.toString() !== req.user._id.toString()) {
+    return res.status(403).json({ message: "Unauthorized" });
   }
+  if (req.file) {
+    const cloudinaryRes = await uploadToCloudinary(req.file.path);
+    profile.image = cloudinaryRes;
+  }
+  if (fullname) profile.fullname = fullname;
+  if (age) profile.age = age;
+  if (gender) profile.gender = gender;
+  if (height) profile.height = height;
+  if (weight) profile.weight = weight;
+  if (fitness_goals) profile.fitness_goals = fitness_goals;
+  const updatedProfile = await profile.save();
+  return res.status(200).json({
+    success: true,
+    message: "Profile updated successfully",
+    user: updatedProfile,
+  });
 });
 exports.getProfile = asyncHandler(async (req, res) => {
   const loginId = req.user._id;

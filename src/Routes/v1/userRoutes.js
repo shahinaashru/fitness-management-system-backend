@@ -24,7 +24,7 @@ const {
 // userRouter.post("/login", login);
 // userRouter.post("/register", registerValidation, register);
 userRouter.post("/", authMiddleware, upload.single("image"), createProfile);
-userRouter.put("/:id", authMiddleware, updateProfile);
+userRouter.put("/:id", authMiddleware, upload.single("image"), updateProfile);
 userRouter.get("/", authMiddleware, getProfile);
 userRouter.get("/users", getUsers);
 userRouter.get("/usersby-order", authMiddleware, getUsersByOrder);

@@ -15,14 +15,10 @@ exports.createProfile = asyncHandler(async (req, res) => {
   } = req.body;
 
   const loginId = req.user._id;
-
-  // Check if profile exists
   const existingTrainer = await trainerDB.findOne({ loginId });
   if (existingTrainer) {
     return res.status(400).json({ message: "Trainer profile already created" });
   }
-
-  // Files from multer
   const imageFile = req.files?.image?.[0];
   const docFile = req.files?.verification_docs?.[0];
 
@@ -55,38 +51,48 @@ exports.createProfile = asyncHandler(async (req, res) => {
   });
 });
 exports.updateProfile = asyncHandler(async (req, res) => {
+  const { id } = req.params;
   const {
     fullname,
     phone_number,
     specialization,
     experience,
-    verification_docs,
     earnings_per_session,
   } = req.body;
-  const { id } = req.params;
-  console.log(id);
   let trainer = await trainerDB.findById(id);
   if (!trainer) {
-    return res.status(400).json({ message: "Trainer not exist" });
+    return res.status(404).json({ message: "Trainer profile not found" });
   }
-  const updatedData = await trainerDB.findOneAndUpdate(
-    { _id: id },
-    {
-      fullname,
-      phone_number,
-      specialization,
-      experience,
-      verification_docs,
-      earnings_per_session,
-    },
-    { new: true }
-  );
-  if (updatedData) {
-    return res.status(201).json({
-      message: "Trainer profile updated succesfully",
-      trainer: updatedData,
-    });
+  if (trainer.loginId.toString() !== req.user._id.toString()) {
+    return res.status(403).json({ message: "Unauthorized" });
   }
+  if (req.files?.image?.[0]) {
+    const cloudinaryImage = await cloudinaryFuncs.imageUploadToCloudinary(
+      req.files.image[0].buffer,
+      "trainer_images"
+    );
+    trainer.image = cloudinaryImage.secure_url;
+  }
+  if (req.files?.verification_docs?.[0]) {
+    const cloudinaryDoc = await cloudinaryFuncs.fileUploadToCloudinary(
+      req.files.verification_docs[0].buffer,
+      "trainer_documents"
+    );
+    trainer.verification_docs = cloudinaryDoc.secure_url;
+  }
+  trainer.fullname = fullname || trainer.fullname;
+  trainer.phone_number = phone_number || trainer.phone_number;
+  trainer.specialization = specialization || trainer.specialization;
+  trainer.experience = experience || trainer.experience;
+  trainer.earnings_per_session =
+    earnings_per_session || trainer.earnings_per_session;
+
+  await trainer.save();
+
+  return res.status(200).json({
+    message: "Trainer profile updated successfully",
+    trainer,
+  });
 });
 exports.getProfile = asyncHandler(async (req, res) => {
   const loginId = req.user._id;

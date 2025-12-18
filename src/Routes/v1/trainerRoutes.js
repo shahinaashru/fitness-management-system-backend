@@ -22,7 +22,15 @@ trainerRouter.post(
   ]),
   createProfile
 );
-trainerRouter.put("/:id", authMiddleware, updateProfile);
+trainerRouter.put(
+  "/:id",
+  authMiddleware,
+  upload.fields([
+    { name: "image", maxCount: 1 },
+    { name: "verification_docs", maxCount: 1 },
+  ]),
+  updateProfile
+);
 trainerRouter.get("/", authMiddleware, getProfile);
 trainerRouter.get("/get-trainers", authMiddleware, getTrainers);
 trainerRouter.get("/dashbord-count", authMiddleware, getDashboardCount);
