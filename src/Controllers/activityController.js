@@ -6,7 +6,8 @@ const trainerDB = require("../Models/trainerModel");
 const OrderDB = require("../Models/orderModel");
 const fitnessProgramDB = require("../Models/fitnessProgramModel");
 exports.addDailyActivity = asyncHandler(async (req, res) => {
-  const { date, workoutStatus, dietPlanStatus, programId } = req.body;
+  const { date, workoutStatus, dietPlanStatus, programId, suggestion } =
+    req.body;
   const loginId = req.user._id;
   const userData = await userDB.findOne({ loginId });
   const user = userData._id;
